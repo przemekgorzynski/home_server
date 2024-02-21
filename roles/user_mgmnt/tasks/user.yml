@@ -1,0 +1,29 @@
+---
+- name: Set password Hash for {{ item.name }}
+  ansible.builtin.set_fact:
+    password: "{{ lookup('community.general.bitwarden', '{{ item. bitwarden_secret_name }}', field='password')[0] | password_hash('sha512') }}"
+  no_log: true
+
+- name: Create users - {{ item.name }}
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid }}"
+    password: "{{ password }}"
+    state: "{{ item.state }}"
+    shell: "{{ item.shell }}"
+    groups: "{{ item.groups }}"
+    create_home: true
+    force: true
+
+- name: Update authorized keys for {{ item.name }}
+  authorized_key:
+    user: "{{ item.name }}"
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+- name: Remove initial user
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    state: absent
+    remove: no
+    force: true
