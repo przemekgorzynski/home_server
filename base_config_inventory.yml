@@ -1,0 +1,29 @@
+all:
+  vars:
+    admin_group:
+    - name: admins
+      gid: 1002
+    users:
+    - name: przemek
+      groups: 'users,sudo,admins,www-data' 
+      bitwarden_secret_name: przemek_user_password 
+      shell: '/bin/bash'
+      state: present
+      uid: '1001'
+  hosts:
+    dell_home_server:
+      ansible_host: 10.0.0.100
+      ansible_become: true
+      ansible_become_user: root
+      ansible_become_method: sudo
+      ansible_user: initialuser
+      ansible_ssh_pass: "{{ lookup('community.general.bitwarden', 'server_ubuntu_initial_account', field='password')[0] }}"
+      ansible_become_password: "{{ lookup('community.general.bitwarden', 'server_ubuntu_initial_account', field='password')[0] }}"
+    pihole:
+      ansible_host: 10.0.0.10
+      ansible_become: true
+      ansible_become_user: root
+      ansible_become_method: sudo
+      ansible_user: pi
+      ansible_ssh_pass: "{{ lookup('community.general.bitwarden', 'server_pi_initial_account', field='password')[0] }}"
+      ansible_become_password: "{{ lookup('community.general.bitwarden', 'server_pi_initial_account', field='password')[0] }}"
