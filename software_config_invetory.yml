@@ -1,0 +1,24 @@
+all:
+  vars:
+    packages:
+      - docker.io
+      - docker-compose
+  hosts:
+    dell:
+      hostname: dellserver
+      ansible_host: 10.0.0.100
+      ansible_become: true
+      ansible_become_user: root
+      ansible_become_method: sudo
+      ansible_user: przemek
+      ansible_ssh_pass: "{{ lookup('community.general.bitwarden', 'przemek_user_password', field='password')[0] }}"
+      ansible_become_password: "{{ lookup('community.general.bitwarden', 'przemek_user_password', field='password')[0] }}"
+    pihole:
+      hostname: piserver
+      ansible_host: 10.0.0.10
+      ansible_become: true
+      ansible_become_user: root
+      ansible_become_method: sudo
+      ansible_user: przemek
+      ansible_ssh_pass: "{{ lookup('community.general.bitwarden', 'przemek_user_password', field='password')[0] }}"
+      ansible_become_password: "{{ lookup('community.general.bitwarden', 'przemek_user_password', field='password')[0] }}"

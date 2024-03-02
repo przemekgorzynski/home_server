@@ -1,0 +1,20 @@
+---
+- name: Make postgresql directories
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0770'
+  with_items: "{{ postgresql_directories }}"
+- name: Copy postgesql docker-compose file
+  template:
+    src: ../templates/postgresql.j2
+    dest: "{{ postgresql_directories[0] }}/docker-compose.yml"
+    owner: root
+    group: root
+    mode: '0660'
+- name: Start postgesql container
+  ansible.builtin.shell:
+    cmd: docker-compose up -d
+    chdir: "{{ postgresql_directories[0] }}"
