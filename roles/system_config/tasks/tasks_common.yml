@@ -1,0 +1,27 @@
+---
+- name: Update system
+  apt:
+    name: "*"
+    state: latest
+    update_cache: true
+    autoremove: true
+
+- name: Install OS packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+
+- name: Set hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: Update /etc/hosts
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      {% for host in groups['all'] %}
+      {{ hostvars[host].ansible_host }} {{ hostvars[host].hostname }}
+      {% endfor %}
+
+- name: Set timezone to Europe/Warsaw
+  shell: sudo timedatectl set-timezone "Europe/Warsaw"

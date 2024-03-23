@@ -1,0 +1,24 @@
+---
+- name: Import Common tasks
+  ansible.builtin.import_tasks: tasks_common.yml
+  tags:
+    - os_config
+    - os_config_common_tasks
+
+- name: Import Raspberry tasks
+  ansible.builtin.import_tasks: tasks_raspberry.yml
+  when:
+    - ansible_facts['ansible_architecture'] is defined
+    - ansible_facts['ansible_architecture'] == "aarch64"
+  tags:
+    - os_config
+    - os_config_raspberry
+
+- name: Import Laptop tasks
+  ansible.builtin.import_tasks: tasks_notebook.yml
+  when:
+    - ansible_facts['architecture'] is defined
+    - ansible_facts['architecture'] == "x86_64"
+  tags:
+    - os_config
+    - os_config_notebook

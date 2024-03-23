@@ -13,7 +13,6 @@
     shell: "{{ item.shell }}"
     groups: "{{ item.groups }}"
     create_home: true
-    force: true
 
 - name: Update authorized keys for {{ item.name }}
   authorized_key:
@@ -21,9 +20,8 @@
     state: present
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
-- name: Remove initial user
-  ansible.builtin.user:
-    name: "{{ ansible_user }}"
-    state: absent
-    remove: no
-    force: true
+# - name: Disable initial user
+#   ansible.builtin.user:
+#     name: "{{ ansible_user }}"
+#     state: absent
+#     force: true

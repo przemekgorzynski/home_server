@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: "{{ lookup('community.general.bitwarden', 'postgresqlDB', field='username')[0] }}"
+      POSTGRES_PASSWORD: "{{ lookup('community.general.bitwarden', 'postgresqlDB', field='password')[0] }}"
+    volumes:
+      - type: bind
+        source: {{ postgresql_directories[1] }}
+        target: /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+#    healthcheck:
+#      test: [“CMD-SHELL”, “pg_isready", "-U", "{{ lookup('community.general.bitwarden', 'postgresqlDB', field='username')[0] }}"]
+#      interval: 1s
+#      timeout: 5s
+#      retries: 10
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
