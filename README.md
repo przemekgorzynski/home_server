@@ -20,3 +20,9 @@ export BW_SESSION=XXXXX
 ```
 ansible-playbook -i base_config_inventory.yml base_config.yml 
 ```
+
+# Software deployment
+
+```
+ansible-playbook -i software_config_invetory.yml software_config.yml
+```
